@@ -1,7 +1,7 @@
 <template>
     <div class="mt-2 mb-5">
         <h4 class>Create a new transaction</h4>
-        <table class="table table-responsive text-center">
+        <table class="table table-light table-responsive text-center">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -82,6 +82,7 @@ function addNewTransaction() {
     store.dispatch("transaction/store", formValues.value).then(r => {
         if (r.status == 200) {
             clearFormCreateTransaction();
+            store.dispatch("fund/myFund");
         } else if (!(r.data.error_message) && !("transaction" in (r.data))) {
             console.log(r.data);
             const keys = Object.keys(r.data);

@@ -9,7 +9,7 @@
             action
         ></form>
 
-        <table class="table table-hover table-responsive text-start">
+        <table class="table table-light table-striped table-hover table-responsive text-start">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -47,7 +47,7 @@
                         <span v-else>{{ tx.amount }}</span>
                     </td>
                     <td>
-                        <span v-if="conditions.editingIndex == index">
+                        <!-- <span v-if="conditions.editingIndex == index">
                             <select
                                 name="type"
                                 class="form-select form-select-sm"
@@ -59,7 +59,8 @@
                             </select>
                             <FormErrorSmall :error="formEditErrors.type"></FormErrorSmall>
                         </span>
-                        <span v-else>{{ tx.type }}</span>
+                        <span v-else>{{ tx.type }}</span>-->
+                        <span>{{ tx.type }}</span>
                     </td>
                     <td>
                         <span v-if="conditions.editingIndex == index">
@@ -159,6 +160,7 @@ function saveEditTransaction(event) {
     }).then(r => {
         if (r.status == 200 && ("transaction" in (r.data))) {
             conditions.value.editingIndex = null;
+            store.dispatch("fund/myFund");
         } else if (r.status == 500) {
             formEditErrors.value["amount"] = r.data.error_message;
             return;
@@ -181,7 +183,8 @@ function cancelEditTransaction() {
 function deleteTransaction(index) {
     if (confirm("Are you sure ?")) {
         const tx_id = (transactions.value.data)[index].id;
-        store.dispatch("transaction/destroy", tx_id).then(r => console.log(r));
+        store.dispatch("transaction/destroy", tx_id).then(r => r.status == 200 ?
+            store.dispatch("fund/myFund") : false);
     }
 }
 </script>

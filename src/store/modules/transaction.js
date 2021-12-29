@@ -76,7 +76,6 @@ export default {
         }) {
             tx_id = tx_id ? tx_id : transaction.id;
             try {
-                console.log(transaction);
                 const response = await axios.put(`${apiURL}update/`, {
                     "id": tx_id,
                     "amount": transaction.amount,
@@ -88,7 +87,6 @@ export default {
                     'tx_id': tx_id,
                     "newValue": response.data.transaction
                 });
-                console.log(response.data);
                 return response;
             } catch (error) {
                 return error.response;

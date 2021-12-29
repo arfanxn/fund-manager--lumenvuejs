@@ -4,13 +4,33 @@ const apiURL = process.env.VUE_APP_API_URL;
 
 export default {
     namespaced: true,
-    state: () => ({}),
-    getters: {},
-    mutations: {},
+    state: () => ({
+        myFund: {},
+    }),
+    getters: {
+        myFund: state => (state.myFund),
+    },
+    mutations: {
+        myFund(state, newValue) {
+            state.myFund = newValue;
+        }
+    },
     actions: {
-        async myFund() {
+        async myFund(store) {
             try {
-                const response = await axios.get(apiURL + "fund/myfund");
+                const response = await axios.get(apiURL + "fund/show");
+                store.commit("myFund", response.data.fund);
+                return response;
+            } catch (error) {
+                return error.response;
+            }
+        },
+        async update(store, balance) {
+            try {
+                const response = await axios.put(apiURL + "fund/update", {
+                    "balance": balance
+                });
+                store.commit("myFund", response.data.updated_fund);
                 return response;
             } catch (error) {
                 return error.response;
