@@ -7,7 +7,6 @@ export default {
     namespaced: true,
     state: () => ({
         userCredentials: JSON.parse(localStorage.getItem("userCredentials")),
-        userToken: Cookies.get("token"),
     }),
     getters: {
         userCredentials(state) {
@@ -17,10 +16,6 @@ export default {
                 return null;
             }
         },
-        userToken(state) {
-            const token = state.userToken ? state.userToken : Cookies.get("token");
-            return token ? token : null;
-        }
     },
     mutations: {
         userCredentials(state, newValue) {
@@ -39,7 +34,6 @@ export default {
                     sameSite: 'Strict',
                     secure: true
                 });
-            state.userToken = newValue;
         }
     },
     actions: {
@@ -84,14 +78,9 @@ export default {
                 return err.response;
             }
         },
-        async isAuthenticated(store, token = null) {
-            token = !token ? store.getters.userToken : token;
+        async isAuthenticated(store) {
             try {
-                const response = await axios.get(`${apiURL}isAuthenticated`, {
-                    headers: {
-                        "token": token
-                    }
-                });
+                const response = await axios.get(`${apiURL}isAuthenticated`);
                 store.commit("userCredentials", response.data.user);
                 store.commit("userToken", response.data.token)
                 return true;

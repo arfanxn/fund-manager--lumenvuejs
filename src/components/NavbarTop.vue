@@ -43,7 +43,7 @@ const state = reactive({
     "navbars": [
         {
             "link": "/",
-            "text": "Home"
+            "text": "Dashboard"
         },
         {
             "link": "/about",

@@ -9,12 +9,13 @@
                     id="inputFullname"
                     v-model="formValues.name"
                 />
-                <small class="text-danger" v-if="formErrors.name">{{ formErrors.name }}</small>
+                <FormErrorSmall :error="formErrors.name"></FormErrorSmall>
             </div>
             <div class="mb-3">
                 <label for="inputEmail" class="form-label">Email address</label>
                 <input type="email" class="form-control" id="inputEmail" v-model="formValues.email" />
-                <small class="text-danger" v-if="formErrors.email">{{ formErrors.email }}</small>
+                <!-- <small class="text-danger" v-if="formErrors.email">{{ formErrors.email }}</small> -->
+                <FormErrorSmall :error="formErrors.email"></FormErrorSmall>
             </div>
             <div class="mb-3">
                 <label for="inputPassword" class="form-label">Password</label>
@@ -24,7 +25,7 @@
                     id="inputPassword"
                     v-model="formValues.password"
                 />
-                <small class="text-danger" v-if="formErrors.password">{{ formErrors.password }}</small>
+                <FormErrorSmall :error="formErrors.password"></FormErrorSmall>
             </div>
             <div class="mb-3">
                 <label for="inputConfPassword" class="form-label">Confirm Password</label>
@@ -34,10 +35,7 @@
                     id="inputConfPassword"
                     v-model="formValues.password_confirmation"
                 />
-                <small
-                    class="text-danger"
-                    v-if="formErrors.password_confirmation"
-                >{{ formErrors.password_confirmation }}</small>
+                <FormErrorSmall :error="formErrors.password_confirmation"></FormErrorSmall>
             </div>
             <button
                 type="submit"
@@ -49,7 +47,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import FormErrorSmall from '../Errors/FormErrorSmall.vue';
+import { ref, watch, defineComponent } from 'vue';
 import { useStore } from "vuex";
 const store = useStore();
 
@@ -59,6 +58,8 @@ const formValues = ref({
     name: String(), email: String(),
     password: String(), password_confirmation: String()
 });
+
+defineComponent({ FormErrorSmall })
 
 watch(() => formValues.value.name, () => {
     formErrors.value.name = null;

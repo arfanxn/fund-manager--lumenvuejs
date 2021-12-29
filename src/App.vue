@@ -1,8 +1,12 @@
 <template>
-  <router-view></router-view>
+  <router-view class="container-md"></router-view>
 </template>
 
 <style>
+a {
+  text-decoration: none;
+}
+
 #nav {
   padding: 30px;
 }

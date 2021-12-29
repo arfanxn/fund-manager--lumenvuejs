@@ -3,14 +3,14 @@ import {
   createWebHistory
 } from 'vue-router';
 import store from '../store';
-import Home from '../views/Home.vue'
+import Dashboard from '../views/Dashboard.vue'
 import Auth from '../views/Auth.vue'
 
 
 const routes = [{
     path: '/',
-    name: 'Home',
-    component: Home // import("../views/Home.vue") 
+    name: 'Dashboard',
+    component: Dashboard // import("../views/Home.vue") 
   }, {
     path: "/authenticate",
     name: "Authenticate",
@@ -60,9 +60,6 @@ router.beforeEach((to, from, next) => {
       bool ? next() : next("/authenticate");
     });
   } else next();
-
-  // next(); 
-
 });
 
 

@@ -4,7 +4,8 @@
             <div class="mb-3">
                 <label for="inputEmail" class="form-label">Email address</label>
                 <input type="email" class="form-control" v-model="formValues.email" id="inputEmail" />
-                <small class="text-danger" v-if="formErrors.email">{{ formErrors.email }}</small>
+                <!-- <small class="text-danger" v-if="formErrors.email">{{ formErrors.email }}</small> -->
+                <FormErrorSmall :error="formErrors.email"></FormErrorSmall>
                 <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
             </div>
             <div class="mb-3">
@@ -15,7 +16,7 @@
                     v-model="formValues.password"
                     id="inputPassword"
                 />
-                <small class="text-danger" v-if="formErrors.password">{{ formErrors.password }}</small>
+                <FormErrorSmall :error="formErrors.password"></FormErrorSmall>
             </div>
 
             <button
@@ -28,12 +29,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import FormErrorSmall from '../Errors/FormErrorSmall.vue';
+import { ref, watch, defineComponent } from 'vue';
 import { useStore } from "vuex";
 
 const store = useStore();
 const formValues = ref({ email: String(), password: String() }),
     formErrors = ref({ email: null, password: null });
+
+defineComponent({ FormErrorSmall })
 
 watch(() => formValues.value.email, () => {
     formErrors.value.email = null;

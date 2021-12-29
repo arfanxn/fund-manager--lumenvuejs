@@ -2,7 +2,8 @@ import {
   createStore
 } from 'vuex'
 import auth from './modules/auth'
-import userFund from './modules/userFund'
+import transaction from './modules/transaction'
+import fund from './modules/fund'
 
 export default createStore({
   state: {},
@@ -10,6 +11,7 @@ export default createStore({
   actions: {},
   modules: {
     auth,
-    userFund
+    transaction,
+    fund
   }
 })
