@@ -6,7 +6,7 @@ const apiURL = process.env.VUE_APP_API_URL;
 export default {
     namespaced: true,
     state: () => ({
-        userCredentials: JSON.parse(localStorage.getItem("userCredentials")),
+        userCredentials: JSON.parse(sessionStorage.getItem("userCredentials")),
     }),
     getters: {
         userCredentials(state) {
@@ -20,7 +20,7 @@ export default {
     mutations: {
         userCredentials(state, newValue) {
             newValue = (newValue) ? newValue : null;
-            localStorage.setItem("userCredentials", JSON.stringify(newValue));
+            sessionStorage.setItem("userCredentials", JSON.stringify(newValue));
             state.userCredentials = newValue;
         },
         userToken(state, newValue) {
