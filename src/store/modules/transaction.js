@@ -5,7 +5,7 @@ const apiURL = process.env.VUE_APP_API_URL + "transaction/";
 export default {
     namespaced: true,
     state: () => ({
-        transactions: []
+        transactions: {}
     }),
     getters: {
         transactions: state => state.transactions,
