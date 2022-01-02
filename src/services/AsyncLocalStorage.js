@@ -7,7 +7,7 @@ class AsyncLocalStorage {
         });
     }
 
-    static getItem(key) {
+    static async getItem(key) {
         return Promise.resolve().then(() => {
             let item = window.localStorage.getItem(key);
             try {
