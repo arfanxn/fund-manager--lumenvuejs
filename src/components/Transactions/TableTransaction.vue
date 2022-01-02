@@ -145,18 +145,18 @@ onMounted(() => {
 
 function saveEditTransaction(event) {
     formEditErrors.value = {};
-    let object = {};
+    let tx = {};
     Object.keys(event.target).forEach(key => {
         const type = event.target[key].type;
         if (type == "hidden" || type == "text" || type == "number"
             || type == "select-one" || type == 'date') {
-            object[event.target[key].name] = event.target[key].value;
+            tx[event.target[key].name] = event.target[key].value;
         }
     });
 
     store.dispatch("transaction/update", {
-        tx_id: object.id,
-        transaction: object
+        tx_id: tx["id"],
+        transaction: tx
     }).then(r => {
         if (r.status == 200 && ("transaction" in (r.data))) {
             conditions.value.editingIndex = null;
