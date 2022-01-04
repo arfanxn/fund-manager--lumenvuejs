@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncLocalStorage from '../../services/AsyncLocalStorage';
 const apiURL = process.env.VUE_APP_API_URL + "transaction/";
 
 export default {
@@ -15,6 +16,7 @@ export default {
         },
         unshiftTransactionsData(state, newValue) {
             (state.transactions.data).unshift(newValue);
+            AsyncLocalStorage.setItem("transactions", (state.transactions));
         },
         updateTransactionsDataByID(state, {
             tx_id,
@@ -25,6 +27,9 @@ export default {
             (state.transactions.data).forEach((tx, index) => {
                 if (tx.id == tx_id) {
                     (state.transactions.data)[index] = newValue;
+                    AsyncLocalStorage.setItem("transactions", (state.transactions));
+                    console.log(state.transactions.data);
+                    AsyncLocalStorage.getItem("transactions").then(r => console.log(r));
                     return;
                 }
             });
@@ -38,18 +43,42 @@ export default {
                 }
             });
             (state.transactions.data).splice(index, 1);
+            AsyncLocalStorage.setItem("transactions", (state.transactions));
         }
     },
     actions: {
         async index(store, params = null) {
             params = params ? `/?${params}` : "";
-            try {
-                const response = await axios.get(apiURL + "index" + params);
-                store.commit("transactions", response.data.transactions)
-                return response;
-            } catch (error) {
-                return error.response;
-            }
+            AsyncLocalStorage.getItem("transactions").then(transactions => {
+                if (typeof transactions == "object" || transactions) {
+                    store.commit("transactions", transactions);
+                }
+            })
+
+            let response;
+            AsyncLocalStorage.getItem("transactions").then(async transactions => {
+                try {
+                    response = await axios.get(apiURL + "index" + params, {
+                        headers: {
+                            "If-None-Match": (!params && transactions) ? transactions.ETag : null,
+                        }
+                    });
+
+                    let responseTransactions = response.data.transactions;
+                    responseTransactions["ETag"] = response.headers["ETag"] ?
+                        response.headers["ETag"] : response.headers["etag"];
+
+                    store.commit("transactions", responseTransactions)
+                    AsyncLocalStorage.setItem("transactions", responseTransactions);
+                } catch (error) {
+                    if (!params) {
+                        store.commit("transactions", transactions)
+                    }
+                    response = error.response;
+                }
+            });
+            return response;
+
         },
         async store(store, {
             amount,
@@ -79,13 +108,12 @@ export default {
                 const response = await axios.put(`${apiURL}update/`, {
                     "id": tx_id,
                     "amount": transaction.amount,
-                    "type": transaction.type,
                     "note": transaction.note,
                     "date": transaction.date,
                 });
                 store.commit("updateTransactionsDataByID", {
                     'tx_id': tx_id,
-                    "newValue": response.data.transaction
+                    "newValue": response.data.updated_transaction
                 });
                 return response;
             } catch (error) {

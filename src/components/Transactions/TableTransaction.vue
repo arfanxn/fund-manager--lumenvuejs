@@ -22,7 +22,7 @@
             </thead>
             <tbody>
                 <tr v-for="(tx , index) in transactions.data" :key="index">
-                    <th scope="row">{{ (index + 1) + ((transactions.current_page - 1) * 10) }}</th>
+                    <th scope="row">{{ (index + 1) + ((transactions.current_page - 1) * 100) }}</th>
                     <td>
                         <span v-if="conditions.editingIndex == index">
                             <input
@@ -158,7 +158,7 @@ function saveEditTransaction(event) {
         tx_id: tx["id"],
         transaction: tx
     }).then(r => {
-        if (r.status == 200 && ("transaction" in (r.data))) {
+        if (r.status == 200 && ("updated_transaction" in (r.data))) {
             conditions.value.editingIndex = null;
             store.dispatch("fund/myFund");
         } else if (r.status == 500) {
